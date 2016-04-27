@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.estsoft.mysite.dao.GuestBookDao;
-import com.estsoft.mysite.exception.GuestBookFetchListException;
 import com.estsoft.mysite.vo.GuestBookVo;
 
 @Controller
@@ -21,7 +20,7 @@ public class GuestBookController {
 	private GuestBookDao dao;
 	
 	@RequestMapping("/index")
-	public String index( Model model ) throws GuestBookFetchListException {
+	public String index( Model model ) {
 		List<GuestBookVo> list = dao.getList();
 		model.addAttribute("list", list);
 		return "/guestbook/index";
@@ -30,21 +29,22 @@ public class GuestBookController {
 	@RequestMapping( value="/insert", method=RequestMethod.POST )
 	public String insert(@ModelAttribute GuestBookVo vo) {
 		dao.insert(vo);
-		return "redirect:/guestbook/index";
+		//아하 이러면 다시 Controller로 돌아온다.>!
+		return "redirect:/guest/index";
 	}
 	
 	@RequestMapping( value="/delete", method=RequestMethod.POST )
 	public String delete(@ModelAttribute GuestBookVo vo ) {
 		System.out.println("/delete에서의 "+vo);
 		dao.delete(vo);
-		return "redirect:/guestbook/index";
+		return "redirect:/guest/index";
 	}
 	
 	@RequestMapping( "/deleteform/{no}")
 	public String deleteform( @PathVariable("no") Long no, Model model) {
 		model.addAttribute("no", no);
 		System.out.println("/deleteform에서의 "+no);
-		return "redirect:/guestbook/deleteform";
+		return "/guestbook/deleteform";
 	}
-
+	
 }

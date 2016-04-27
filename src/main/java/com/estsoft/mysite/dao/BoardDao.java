@@ -32,7 +32,8 @@ public class BoardDao {
 			pstmt.setString(3, vo.getContent());
 
 			pstmt.executeUpdate();
-
+			System.out.println("들어오기는 했나요? BoardDao의 insert");
+			
 		} catch (SQLException ex) {
 			System.out.println("insert error : " + ex);
 		} finally {
@@ -90,6 +91,8 @@ public class BoardDao {
 			pstmt.setLong(3, vo.getNo());
 
 			pstmt.executeUpdate();
+			
+			System.out.println("update board에 들어왔습니다");
 		} catch (SQLException ex) {
 			System.out.println("error : " + ex);
 		} finally {

@@ -5,10 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%
-	UserVo authUser = (UserVo)session.getAttribute("authUser");
-	BoardVo vo = (BoardVo)request.getAttribute("boardVo");
-%>
 <html>
 <head>
 <title>mysite</title>
@@ -20,7 +16,7 @@
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board">
+				<form class="board-form" method="POST" action="${pageContext.request.contextPath}/board/reply">
 				<input type = "hidden" name = "a" value="reply">
 				<input type='hidden' name="userNo" value="${boardVo.userNo }">
 				<input type='hidden' name="groupNo" value="${boardVo.groupNo }">		
@@ -42,7 +38,7 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath}/board">취소</a>
+						<a href="${pageContext.request.contextPath}/board/list">취소</a>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

@@ -14,7 +14,7 @@
 
 	<insert id='insert' parameterType='guestbookvo'>
 	<![CDATA[
-		INSERT INTO guestbook VALUES (null, #{name }, NOW( ), {#message }, password(#{password }) )]]>
+		INSERT INTO guestbook VALUES (null, #{name }, NOW( ), #{message }, password(#{passwd }) )]]>
 		<selectKey keyProperty="no" resultType="long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -22,7 +22,7 @@
 	
 	<delete id='delete' parameterType='guestbookvo'>
 	<![CDATA[
-		DELETE FROM guestbook WHERE no=#{no } AND passwd= password(#{password })]]>
+		DELETE FROM guestbook WHERE no=#{no } AND passwd= password(#{passwd })]]>
 	</delete>
 	
 </mapper>

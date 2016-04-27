@@ -25,91 +25,16 @@ public class GuestBookDao {
 	private DataSource dataSource;
 	@Autowired
 	private SqlSession sqlSession;
-	
-	/*
-	 public void delete( GuestBookVo vo ) {
-		 int countDeleted = sqlSession.delete("guestbook.delete", vo);
-		 return countDeleted;
-		 
-	      Connection conn = null;
-	      PreparedStatement pstmt = null;
-	      try {
-	         conn = dataSource.getConnection( );
-	         //
-	         String sql = "DELETE FROM guestbook WHERE no=? AND passwd= password(?)";
-	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setLong(1, vo.getNo( ));
-	         pstmt.setString(2, vo.getPasswd( ));
-	         pstmt.executeUpdate( );
-
-	      } catch (SQLException ex) {
-	         System.out.println("Error" + ex);
-	         ex.printStackTrace();
-	      }
-	   }*/
 	 
 	 public int delete( GuestBookVo vo ) {
 		 int countDeleted = sqlSession.delete("guestbook.delete", vo);
 		 return countDeleted;
-		 /*
-	      Connection conn = null;
-	      PreparedStatement pstmt = null;
-	      try {
-	         conn = dataSource.getConnection( );
-	         //
-	         String sql = "DELETE FROM guestbook WHERE no=? AND passwd= password(?)";
-	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setLong(1, vo.getNo( ));
-	         pstmt.setString(2, vo.getPasswd( ));
-	         pstmt.executeUpdate( );
-
-	      } catch (SQLException ex) {
-	         System.out.println("Error" + ex);
-	         ex.printStackTrace();
-	      }*/
 	   }
-
-	 /*
-	public void insert(GuestBookVo vo) {  //vo 인풋을 받는다
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-
-		try {
-			conn = dataSource.getConnection();
-
-//			String sql = "INSERT INTO guestbook VALUES (null, ?, NOW( ), ?, ?)";
-			//암호화 시키는 목적이 있기 때문에 ㅋㅋㅋㅋ 추가해준다! 이것때문에 안됐구만;;
-			String sql = "INSERT INTO guestbook VALUES (null, ?, NOW( ), ?, password(?))";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, vo.getName( ) );
-			pstmt.setString(2, vo.getMessage( ) );
-			pstmt.setString(3, vo.getPasswd( ) );
-			pstmt.executeUpdate();
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (conn != null) {
-					conn.close();
-				}
-
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	
-	*/
-
 	
 	 public Long insert(GuestBookVo vo) {  //vo 인풋을 받는다	
 		int count = sqlSession.insert("guestbook.insert", vo);
 		System.out.println( count +" :  "+ vo.getNo( ) );
-		return 0L;
+		return vo.getNo();
 	}
 
 	public List<GuestBookVo> getList() //throws GuestBookFetchListException 
