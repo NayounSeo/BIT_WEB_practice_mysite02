@@ -25,13 +25,12 @@
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-	<!-- POST 방식의 한글처리. 에 관련된 필터.. 그런데 이거 없을 때는 안나오더라 왜였을까...ㅋㅋㅋㅋ -->
+	<!-- POST 방식의 한글처리. 에 관련된 필터 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

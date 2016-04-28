@@ -17,10 +17,10 @@
 				<form id="search_form" action="${pageContext.request.contextPath}/board/list/${wannaSearch }" method="post">
 				<c:choose>
 					<c:when test='${wannaSearch == ""}'>
-						<input type="text" id="kwd" name="kwd" value="">
+						<input type="text" id="kwd" name="wannaSearch" value="">
 					</c:when>
 					<c:otherwise>
-						<input type="text" id="kwd" name="kwd" value="">
+						<input type="text" id="kwd" name="wannaSearch" value="">
 						</c:otherwise>
 					</c:choose>
 					<input type="submit" value="찾기">
@@ -63,7 +63,7 @@
 				<div class="pager">
 					<ul>
 					<c:if test="${prevPage > 0 }">
-						<li><a href="${pageContext.request.contextPath}/board?page=${prevPage }&kwd=${wannaSearch }&">◀</a></li>
+						<li><a href="${pageContext.request.contextPath}/board/list">◀</a></li>
 					</c:if>
 					<c:forEach begin="${firstPage }" end="${lastPage }" var="page" step="1">
 							<c:choose>
@@ -71,20 +71,19 @@
 									<li class="selected">${page }</li>
 								</c:when>
 								<c:otherwise>
-								<li><a href="${pageContext.request.contextPath}/board?page=${page }&kwd=${wannaSearch }">${page }</a></li>
+								<li><a href="${pageContext.request.contextPath}/board/list">${page }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
-					<c:if test="${map.nextPage > 0 }">
-						<li><a href="${pageContext.request.contextPath}/board?page=${nextPage }&kwd=${wannaSearch }">▶</a></li>		
+					<c:if test="${nextPage > 0 }">
+						<li><a href="${pageContext.request.contextPath}/board/list">▶</a></li>		
 					</c:if>
 					</ul>
 				</div>
+				
 				<c:choose>
 					<c:when test="${ not empty authUser }">
 					<div class="bottom">
-	<!-- 				와 개바보였네 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ	
-						</a href="/WEB-INF/views/board?a=insert" id="new-book">글쓰기<//a> -->
 						<a href="${pageContext.request.contextPath}/board/writeform" id="new-book">글쓰기</a>
 					</div>
 					</c:when>	

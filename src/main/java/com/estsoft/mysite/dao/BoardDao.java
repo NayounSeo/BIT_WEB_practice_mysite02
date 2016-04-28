@@ -7,23 +7,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.estsoft.db.DBConnection;
 import com.estsoft.mysite.vo.BoardVo;
 
 @Repository
 public class BoardDao {
 	@Autowired
-	private DBConnection dbConnection;
+	private DataSource dataSource;
 
 	public void insert( BoardVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			// 이렇게 하면 max 관련한 다른 메소드나 static 변수는 필요 없다.
 			String sql = "INSERT INTO board  VALUES (null, ?, ?, ?, now( ), 0, (SELECT ifnull(max(group_no), 0) + 1 FROM board as b), 1, 0)";
 			pstmt = conn.prepareStatement(sql);
@@ -54,7 +55,7 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 
 			String sql = "DELETE FROM board WHERE user_no=? AND board_no=?";
 			pstmt = conn.prepareStatement(sql);
@@ -83,7 +84,7 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "UPDATE board SET title=?, content=? WHERE board_no =?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
@@ -114,7 +115,7 @@ public class BoardDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "SELECT board_no, user_no, title, content, reg_date, views, group_no, order_no, depth FROM board WHERE board_no = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
@@ -170,7 +171,7 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "UPDATE board SET views=views+1 WHERE board_no =?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
@@ -319,7 +320,7 @@ public class BoardDao {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "INSERT INTO board  VALUES (null, ?, ?, ?, now( ), 0, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, vo.getUserNo());
@@ -352,7 +353,7 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "UPDATE board SET order_no = order_no+1 WHERE group_no = ? AND order_no >= ?";
 			pstmt = conn.prepareStatement(sql);
 
@@ -383,7 +384,7 @@ public class BoardDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "SELECT b.board_no, u.name, b.title, b.reg_date, b.views, b.group_no, b.order_no, b.depth, b.user_no FROM board b, user u "
 					+ "WHERE b.user_no = u.no AND (title LIKE ? OR content LIKE ?) " 
 					+ "ORDER BY group_no DESC, order_no ASC " 
@@ -449,7 +450,7 @@ public class BoardDao {
 		ResultSet rs = null;
 
 		try {
-			conn = dbConnection.getConnection();
+			conn = dataSource.getConnection();
 			String sql = "SELECT COUNT(*) FROM board " + "WHERE title LIKE ? OR content LIKE ? "
 					+ "ORDER BY group_no DESC, order_no ASC";
 			pstmt = conn.prepareStatement(sql);

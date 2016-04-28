@@ -12,9 +12,6 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
-/*	@Autowired
- *  private MailSender mailSender*/
-	
 	public void join( UserVo vo) {
 		userDao.insert(vo);
 		//메일 보내기를 여기에 넣는다고

@@ -17,12 +17,20 @@ public class GuestBookService {
 		return guestBookDao.getList();
 	}
 	
+	public List<GuestBookVo> getMessageList( int page ) {
+		return guestBookDao.getList(page);
+	}
+	
 	public boolean deleteMessage( GuestBookVo vo ) {
 		return guestBookDao.delete(vo) == 1;
 	}
 
-	public boolean insertMessage( GuestBookVo vo ) {
+	public GuestBookVo insertMessage( GuestBookVo vo ) {
 		Long no = guestBookDao.insert( vo );
-		return no != 0;
+		if( no == 0 ) {
+			return null;
+		}
+		GuestBookVo guestBookVo = guestBookDao.get(no);
+		return guestBookVo;
 	}
 }

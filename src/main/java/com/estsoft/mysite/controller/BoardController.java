@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.estsoft.mysite.dao.BoardDao;
 import com.estsoft.mysite.vo.BoardVo;
@@ -25,11 +26,13 @@ public class BoardController {
 	private BoardDao dao;
 	
 	@RequestMapping("/list")
-	public String list( Model model ) {
+	public String list( @RequestParam( value="wannaSearch", required=false) String wannaSearch, @RequestParam( value="page", required=false) int page, Model model ) {
 		// 변수 처리 안함
-		String kwd = "";
 		int currentPage = 1;
-		int totalBoards = dao.getSearchedCount(kwd);
+		if ( page != 1) {
+			currentPage = page;
+		}
+		int totalBoards = dao.getSearchedCount(wannaSearch);
 		int totalPage = (int)Math.ceil( (double) totalBoards / row_Size);
 		if( currentPage < 1 || currentPage > totalPage ) {
 			currentPage = 1;
@@ -50,8 +53,8 @@ public class BoardController {
 		if ( lastPage < totalPage ) {
 			nextPage = lastPage + 1;
 		}
-		List<BoardVo> list = dao.getSearchedPagingList(kwd, currentPage, row_Size);
-		model.addAttribute("wannaSearch", kwd);
+		List<BoardVo> list = dao.getSearchedPagingList(wannaSearch, currentPage, row_Size);
+		model.addAttribute("wannaSearch", wannaSearch);
 		model.addAttribute("page", "1");
 		model.addAttribute("rowSize", row_Size);
 		model.addAttribute("pageSize", page_Size);
@@ -66,18 +69,25 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/writeform")
-	public String writeform( ) {
+	public String writeform( HttpSession session ) {
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if( authUser == null ) {
+			return "redirect:/user/loginform";
+		}
 		return "/board/write";
 	}
 	
 	@RequestMapping( value="/write", method=RequestMethod.POST )
 	public String write( @ModelAttribute BoardVo vo, HttpSession session) {
 		System.out.println(vo);
-		
+		/*
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		vo.setUserNo(authUser.getNo());
 		vo.setUserName(authUser.getName());
 		System.out.println("write에서의 authUser는 " + authUser);
+		*/
+		
+
 		
 		dao.insert(vo);
 		return "redirect:/board/list";

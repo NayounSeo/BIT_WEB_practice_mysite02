@@ -44,6 +44,7 @@ public class UserController {
 		return "/user/loginform";
 	}
 	
+	/*
 	@RequestMapping("/login")
 	public String login( @ModelAttribute UserVo vo, HttpSession session ) {
 		UserVo userVo = userService.login(vo);
@@ -55,7 +56,9 @@ public class UserController {
 		session.setAttribute("authUser", userVo);
 		return "redirect:/main";
 	}
+	*/
 	
+	/*
 	@RequestMapping("/logout")
 	public String logout( HttpSession session ) {
 		//인증유무 체크
@@ -66,6 +69,7 @@ public class UserController {
 		}
 		return "redirect:/main";
 	}
+	*/
 	
 	@RequestMapping("/checkemail")
 	@ResponseBody
@@ -74,18 +78,7 @@ public class UserController {
 		Map<String, Object> map = new HashMap<String, Object>( );
 		map.put("result", "success");
 		map.put("data", vo==null);
-		
 		return map;
-	}
-	
-	@RequestMapping("/hello")
-	@ResponseBody
-	public String hello() {
-		return "안녕";
-	}
-	
-	public String getUser() {
-		return "";
 	}
 
 }
