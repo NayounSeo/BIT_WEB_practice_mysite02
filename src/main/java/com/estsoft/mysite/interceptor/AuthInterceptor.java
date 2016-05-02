@@ -14,7 +14,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		if (handler instanceof HandlerMethod == false ) {
+		if ( handler instanceof HandlerMethod == false ) {
 			return true;
 		}
 		Auth auth = ( (HandlerMethod) handler ).getMethodAnnotation( Auth.class );

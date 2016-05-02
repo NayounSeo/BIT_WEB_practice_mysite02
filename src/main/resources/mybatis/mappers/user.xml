@@ -8,7 +8,7 @@
 	
 	<select id='selectByEmailAndPassword' resultType='uservo' parameterType='uservo'>
 	<![CDATA[
-		SELECT no, name, email FROM user WHERE email=#{email} AND passwd=password(#{password)]]>
+		SELECT no, name, email FROM user WHERE email=#{email} AND passwd=password(#{password})]]>
 	</select>
 	
 	<select id='selectByNo' resultType='uservo' parameterType='long'>

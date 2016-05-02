@@ -8,13 +8,20 @@ import com.estsoft.mysite.vo.UserVo;
 
 @Service
 public class UserService {
-
 	@Autowired
 	private UserDao userDao;
 	
 	public void join( UserVo vo) {
 		userDao.insert(vo);
 		//메일 보내기를 여기에 넣는다고
+	}
+	
+	public void updateInfo(UserVo vo) {
+		userDao.update(vo);
+	}
+	
+	public UserVo Anonymous(Long userNo ) {
+		return userDao.get(userNo);
 	}
 	
 	public UserVo login( UserVo vo) {
@@ -27,4 +34,5 @@ public class UserService {
 		return vo;
 	}
 	
+		
 }

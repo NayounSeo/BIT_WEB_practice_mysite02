@@ -35,8 +35,8 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>				
-					<c:set var="firstIndex"	value="${totalBoards - (currentPage - 1)*rowSize }" />
-					<c:forEach items="${list }" var="vo" varStatus="status">
+					<c:set var="firstIndex"	value="${map.totalBoards - (map.currentPage - 1)*map.rowSize }" />
+					<c:forEach items="${map.list }" var="vo" varStatus="status">
 						<tr>
 							<td>[${firstIndex - status.index + 1 }]</td>
 							<td style="text-align:left; padding-left:${vo.depth*20}px">
@@ -62,20 +62,21 @@
 				
 				<div class="pager">
 					<ul>
-					<c:if test="${prevPage > 0 }">
+					<c:if test="${map.prevPage > 0 }">
 						<li><a href="${pageContext.request.contextPath}/board/list">◀</a></li>
 					</c:if>
-					<c:forEach begin="${firstPage }" end="${lastPage }" var="page" step="1">
+					<c:forEach begin="${map.firstPage }" end="${map.lastPage }" var="page" step="1">
 							<c:choose>
-								<c:when test="${page == currentPage }">
+								<c:when test="${page == map.currentPage }">
 									<li class="selected">${page }</li>
 								</c:when>
 								<c:otherwise>
-								<li><a href="${pageContext.request.contextPath}/board/list">${page }</a></li>
+								<!--  홀... 변수는 그냥 여전히 ?로 보내줄 수도 있는거였어... -->
+								<li><a href="${pageContext.request.contextPath}/board/list?page=${page }">${page }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
-					<c:if test="${nextPage > 0 }">
+					<c:if test="${map.nextPage > 0 }">
 						<li><a href="${pageContext.request.contextPath}/board/list">▶</a></li>		
 					</c:if>
 					</ul>

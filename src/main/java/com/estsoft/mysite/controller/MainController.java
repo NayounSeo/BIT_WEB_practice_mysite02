@@ -12,8 +12,11 @@ public class MainController {
 	
 	@RequestMapping("/main")
 	public String index( ) {
-		LOG.debug("index called");
-		return"main/index";
+		LOG.debug( "#ex1 - debug log" );
+		LOG.info( "#ex1 - info log" );
+		LOG.warn( "#ex1 - warn log" );
+		LOG.error( "#ex1 - error log" );
+		return "main/index";
 	}
 		
 }

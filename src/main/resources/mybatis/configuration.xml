@@ -4,11 +4,11 @@
 	<typeAliases>
 		<typeAlias type="com.estsoft.mysite.vo.GuestBookVo" alias='guestbookvo'/>
 		<typeAlias type="com.estsoft.mysite.vo.UserVo" alias="uservo"/>
-		<!--  typeAlias type="com.estsoft.mysite.vo.BoardVo" alias="boardvo"/-->
+		<typeAlias type="com.estsoft.mysite.vo.BoardVo" alias="boardvo"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mappers/user.xml" />
 		<mapper resource="mybatis/mappers/guestbook.xml" />
-		<!-- mapper resource="mybatis/mappers/board.xml" /-->
+		<mapper resource="mybatis/mappers/board.xml" />
 	</mappers>
 </configuration>

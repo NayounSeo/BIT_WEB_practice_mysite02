@@ -10,8 +10,7 @@
 	<![CDATA[
 		INSERT INTO guestbook VALUES (null, #{name }, NOW( ), #{message }, password(#{passwd }) )]]>
 		<selectKey keyProperty="no" resultType="long" order="AFTER">
-			SELECT
-			LAST_INSERT_ID()
+			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
 	
@@ -26,10 +25,9 @@
 		FROM guestbook ORDER BY reg_date DESC]]>
 	</select>
 	
-	<select id='selectPageList' parameterType=resultType='guestbookvo'
-
-
-
-
+	<select id='selectPageList' parameterType='int' resultType='guestbookvo'>
+	<![CDATA[
+		SELECT no, name, reg_date, message FROM guestbook ORDER BY reg_date DESC LIMIT #{page*5-5}, 5]]>
+	</select>
 
 </mapper>

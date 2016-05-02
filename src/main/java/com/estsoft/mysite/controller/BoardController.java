@@ -1,6 +1,6 @@
 package com.estsoft.mysite.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,61 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.estsoft.mysite.annotation.Auth;
+import com.estsoft.mysite.annotation.AuthUser;
 import com.estsoft.mysite.dao.BoardDao;
+import com.estsoft.mysite.service.BoardService;
 import com.estsoft.mysite.vo.BoardVo;
 import com.estsoft.mysite.vo.UserVo;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
-	private static final int row_Size = 5;
-	private static final int page_Size=3;
 	@Autowired
-	private BoardDao dao;
+	private BoardService boardService;
 	
-	@RequestMapping("/list")
-	public String list( @RequestParam( value="wannaSearch", required=false) String wannaSearch, @RequestParam( value="page", required=false) int page, Model model ) {
-		// 변수 처리 안함
-		int currentPage = 1;
-		if ( page != 1) {
-			currentPage = page;
-		}
-		int totalBoards = dao.getSearchedCount(wannaSearch);
-		int totalPage = (int)Math.ceil( (double) totalBoards / row_Size);
-		if( currentPage < 1 || currentPage > totalPage ) {
-			currentPage = 1;
-		}
-		int firstPage = (int)(Math.ceil( (double) currentPage/ page_Size) -1) * page_Size + 1;
-		if (firstPage < 0) {
-			firstPage = 1;
-		}
-		int lastPage = firstPage + page_Size - 1;
-		if ( totalPage < lastPage ) {
-			lastPage = totalPage;
-		}
-		int prevPage = 0;
-		if ( firstPage > page_Size ) {
-			prevPage = firstPage-1;
-		}
-		int nextPage = 0;
-		if ( lastPage < totalPage ) {
-			nextPage = lastPage + 1;
-		}
-		List<BoardVo> list = dao.getSearchedPagingList(wannaSearch, currentPage, row_Size);
-		model.addAttribute("wannaSearch", wannaSearch);
-		model.addAttribute("page", "1");
-		model.addAttribute("rowSize", row_Size);
-		model.addAttribute("pageSize", page_Size);
-		model.addAttribute("totalBoards", totalBoards);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("firstPage", firstPage);
-		model.addAttribute("lastPage", lastPage);
-		model.addAttribute("prevPage", prevPage);
-		model.addAttribute("nextPage", nextPage);
-		model.addAttribute("list", list);
-		return "/board/list";
-	}
-	
+	// 사실 @Auth 단 메소드는 NULL 체크 안해줘도 되지용 Annotation에서 체크합니다.
+	@Auth
 	@RequestMapping("/writeform")
 	public String writeform( HttpSession session ) {
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
@@ -78,64 +38,59 @@ public class BoardController {
 	}
 	
 	@RequestMapping( value="/write", method=RequestMethod.POST )
-	public String write( @ModelAttribute BoardVo vo, HttpSession session) {
-		System.out.println(vo);
-		/*
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		vo.setUserNo(authUser.getNo());
-		vo.setUserName(authUser.getName());
-		System.out.println("write에서의 authUser는 " + authUser);
-		*/
-		
-
-		
-		dao.insert(vo);
+	public String write( @AuthUser UserVo authUser, @ModelAttribute BoardVo vo) {
+		vo.setUserNo(authUser.getNo( ) );
+		boardService.writeBoard( vo );
 		return "redirect:/board/list";
 	}
-
+	
 	@RequestMapping( "/view/{no}")
 	public String view( @PathVariable("no") Long no, Model model) {
-		BoardVo boardVo = dao.getBoard(no);
-		dao.plusView(no);
+		BoardVo boardVo = boardService.boardViewer(no);
 		model.addAttribute("boardVo", boardVo);
+		System.out.println("view에서 boardVo의 정보 : "+boardVo);
 		return "/board/view";
 	}
 	
+	@RequestMapping("/list")
+	public String list( @RequestParam( value="wannaSearch", required=true, defaultValue="" ) String wannaSearch, @RequestParam( value="page", required=true, defaultValue="1") int page, Model model ) {
+		Map<String, Object> map = boardService.listBoard( wannaSearch, page );
+		model.addAttribute( "map", map );
+		return "/board/list";
+	}
+	
+	@Auth
 	@RequestMapping("/modifyform/{no}")
 	public String modifyform(@PathVariable("no") Long no, Model model ) {
-		BoardVo boardVo = dao.getBoard(no);
+		BoardVo boardVo = boardService.noSelectedBoard(no);
 		model.addAttribute("boardVo", boardVo);
 		return "/board/modify";
 	}
 	
 	@RequestMapping("/modify")
 	public String modify(@ModelAttribute BoardVo boardVo ) {
-		dao.update(boardVo);
-		System.out.println("/modify에서 "+boardVo);
+		boardService.modifyBoard(boardVo);
 		return "redirect:/board/view/"+boardVo.getNo();
 	}
 	
+	@Auth
 	@RequestMapping( "/delete/{no}")
 	public String delete(@PathVariable("no") Long no) {
-		BoardVo vo = dao.getBoard(no);
-		System.out.println("/deleteform에서의 "+vo);
-		dao.delete(vo);
+		boardService.deleteBoard(no);
 		return "redirect:/board/list";
 	}
-	
+
+	@Auth
 	@RequestMapping("/replyform/{no}")
 	public String replyform(@PathVariable("no") Long no, Model model ) {
-		System.out.println("/replyform 여기까지 들어왔어요!");
-		BoardVo vo = dao.getBoard(no);
-		model.addAttribute("boardVo", vo);
-		System.out.println(vo);
+		BoardVo boardVo = boardService.noSelectedBoard(no);
+		model.addAttribute("boardVo", boardVo);
 		return "/board/reply";
 	}
 	
 	@RequestMapping("/reply")
-	public String reply(@ModelAttribute BoardVo boardVo ) {
-		dao.setNewOrder(boardVo);
-		dao.insert1(boardVo);
+	public String reply(@ModelAttribute BoardVo boardVo) {
+		boardService.writeReplyBoard(boardVo);
 		return "redirect:/board/list";
 	}
 

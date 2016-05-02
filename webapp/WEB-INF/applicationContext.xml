@@ -26,7 +26,9 @@
 			expression="org.springframework.stereotype.Component" />
 	</context:component-scan>
 
-	<bean id="mySQLWebDBConnection" class="com.estsoft.db.MySQLWebDBConnection"></bean>
+	<!-- bean id="mySQLWebDBConnection" class="com.estsoft.db.MySQLWebDBConnection"></bean -->
+
+	<!--  여기가 뭔가 이상했었나 보다 그동안 계속 에러나서 뭔가 했는디....! 홀 복붙하니 에러가 사라졌다 -->
 
 	<!-- Connection Pool DataSource -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -46,5 +48,8 @@
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
+	
+	<!--  AOP Auto Proxy 설정! mysite에도 나중에 이거 하나 추가해 줘요. -->
+	<aop:aspectj-autoproxy />
 
 </beans> 

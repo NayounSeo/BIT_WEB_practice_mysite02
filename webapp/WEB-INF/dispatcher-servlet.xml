@@ -8,6 +8,9 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 	xmlns:mvc="http://www.springframework.org/schema/mvc">
 
+	<!--  AOP Auto Proxy -->
+	<aop:aspectj-autoproxy />
+
 	<!-- 1. validator, conversionService, messageConverter를 자동으로 등록 -->
 	<mvc:annotation-driven>
 		<mvc:message-converters>
@@ -27,6 +30,14 @@
 				</property>
 			</bean>
 		</mvc:message-converters>
+
+		<!-- argument resolver -->
+		<mvc:argument-resolvers>
+			<bean
+				class="com.estsoft.mysite.resolver.AuthUserHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+
+
 	</mvc:annotation-driven>
 
 	<!-- 2. 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
@@ -47,7 +58,6 @@
 	</bean>
 
 	<!--5. Interceptors -->
-
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/user/login" />
@@ -62,8 +72,18 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/assets/**" />
-			<bean class="com.bit2015.mysite3.interceptor.AuthInterceptor" />
+			<bean class="com.estsoft.mysite.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+
+	<!-- 6. MessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages/messages_ko</value>
+			</list>
+		</property>
+	</bean>
+
 </beans>

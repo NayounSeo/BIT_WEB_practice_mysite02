@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<!-- 다 내가 짰던 쿼리로 되어 있음! -->
+	<insert id='insert' parameterType='boardvo'>
+	<![CDATA[
+		INSERT INTO board  VALUES (null, #{userNo }, #{title },#{content }, NOW(), 0, (SELECT ifnull(max(group_no), 0) + 1 FROM board as b), 1, 0) ]]>
+		<selectKey keyProperty="no" resultType="long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<delete id='delete' parameterType='boardvo'>
+		<![CDATA[
+			DELETE FROM board WHERE user_no=#{userNo } AND board_no=#{no }]]>
+	</delete>
+
+	<update id='update' parameterType='boardvo'>
+		<![CDATA[UPDATE board SET title=#{title }, content=#{content} WHERE board_no =#{no }]]>
+	</update>
+
+	<select id="getByNo" resultType='boardvo' parameterType="long">
+		<![CDATA[
+			SELECT board_no as no, user_no as userNo, title, content, DATE_FORMAT(reg_date, '%Y-%m-%d %p %h:%i:%s') as regDate, views, group_no as groupNo, order_no as orderNo, depth FROM board WHERE board_no = #{no }]]>
+	</select>
+
+	<select id="getTotalCount" resultType='int' parameterType="string">
+		<![CDATA[
+			SELECT COUNT(*) FROM board a, user b WHERE a.user_no = b.no AND (title LIKE '%${wannaSearch}%' OR content LIKE '%${wannaSearch}%')]]>	
+	</select>
+	
+	<update id='updateView' parameterType='long'>
+		<![CDATA[
+			UPDATE board SET views=views+1 WHERE board_no =#{no }]]>
+	</update>
+	
+	<update id='updateOrder' parameterType='boardvo'>
+		<![CDATA[
+			UPDATE board SET order_no = #{orderNo }+1 WHERE group_no =#{groupNo } AND order_no >= #{orderNo }]]>
+	</update>
+	
+	<insert id='insert1' parameterType='boardvo'>
+		<![CDATA[
+			INSERT INTO board  VALUES (null, #{userNo}, #{title }, #{content }, NOW(), 0, #{groupNo }, #{orderNo }, #{depth }) ]]>
+			<selectKey keyProperty="no" resultType="long" order="AFTER">
+				SELECT LAST_INSERT_ID()
+			</selectKey>
+	</insert>
+	
+	<select id='selectSearchedPageList' parameterType='hashmap' resultType='boardvo'>
+	<![CDATA[
+		SELECT b.board_no as no, b.title, u.name as userName, b.views, DATE_FORMAT(b.reg_date, '%Y-%m-%d %p %h:%i:%s') as regDate, b.group_no as groupNo, b.order_no as orderNo, b.depth, b.user_no as userNo FROM board b, user u
+		WHERE b.user_no = u.no AND ( title LIKE '%${wannaSearch}%' OR content LIKE '%${wannaSearch}%')
+		ORDER BY group_no DESC, order_no ASC
+		LIMIT #{rowFrom}, #{rowSize}]]>
+	</select>
+	
+</mapper>

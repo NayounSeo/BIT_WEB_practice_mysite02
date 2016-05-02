@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.estsoft.mysite.dao.GuestBookDao;
+import com.estsoft.mysite.service.GuestBookService;
 import com.estsoft.mysite.vo.GuestBookVo;
 
 @Controller
 @RequestMapping("/guest")
 public class GuestBookController {
 	@Autowired
-	private GuestBookDao dao;
+	private GuestBookService guestBookService;
 	
 	@RequestMapping("/index")
 	public String index( Model model ) {
-		List<GuestBookVo> list = dao.getList();
+		List<GuestBookVo> list = guestBookService.getMessageList( );
 		model.addAttribute("list", list);
 		return "/guestbook/index";
 	}
 	
 	@RequestMapping( value="/insert", method=RequestMethod.POST )
 	public String insert(@ModelAttribute GuestBookVo vo) {
-		dao.insert(vo);
+		guestBookService.insertMessage(vo);
 		//아하 이러면 다시 Controller로 돌아온다.>!
 		return "redirect:/guest/index";
 	}
@@ -36,7 +36,7 @@ public class GuestBookController {
 	@RequestMapping( value="/delete", method=RequestMethod.POST )
 	public String delete(@ModelAttribute GuestBookVo vo ) {
 		System.out.println("/delete에서의 "+vo);
-		dao.delete(vo);
+		guestBookService.deleteMessage(vo);
 		return "redirect:/guest/index";
 	}
 	
@@ -46,5 +46,7 @@ public class GuestBookController {
 		System.out.println("/deleteform에서의 "+no);
 		return "/guestbook/deleteform";
 	}
+	
+	
 	
 }

@@ -1,9 +1,18 @@
 package com.estsoft.mysite.vo;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserVo {
 	private Long no;
+	
+	@NotEmpty
 	private String name;
+	
+	@NotEmpty
+	@Email
 	private String email;
+	
 	private String password;
 	private String gender;
 	
